@@ -43,10 +43,7 @@ namespace SO
                 startingValue = _value;
             }
 #endif
-            if (OnChanged != null)
-            {
                 RaisEvents();
-            }
         }
 
         public void SetValue(VariableSO<T> numSO)
