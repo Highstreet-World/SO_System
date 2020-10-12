@@ -14,7 +14,7 @@ namespace SO
     {
 
         //Value
-
+        [HideInInspector]
         public T Value { get { return GetValue(); } set { SetValue(value); } }
         [SerializeField]
         private T _value;
@@ -30,7 +30,8 @@ namespace SO
 
         //public static implicit operator VariableSO<T>(T v)
         //{
-        //    return 
+        //    this.value = v;
+        //    return this;
         //}
 
         public virtual void SetValue(T newValue, bool log = false)
