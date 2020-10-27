@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace SO.Events
@@ -27,25 +28,37 @@ namespace SO.Events
 
 
 
-         public void Raise()
+        public void Raise()
         {
-            RaiseAsync(null);
+            Raise(null);
         }
 
         public void Raise(object value)
         {
             Debug.LogWarning("Raise: " + name);
-            RaiseAsync(value);
-        }
-        public /*async*/ void RaiseAsync(object value)
-        {
-           // await Task.Delay(1);
             for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
             {
                 Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
                 listenersCallbacks[i].objectEvent.Invoke(value);
             }
         }
+
+        public void RaiseAsync()
+        {
+            RaiseAsync(null);
+        }
+#if !UNITY_WEBGL 
+        public async void RaiseAsync(object value)
+        {
+            await Task.Delay(1);
+            Raise(value);
+        }
+#else
+        public void RaiseAsync(object value)
+        {
+            Raise(value);
+        }
+#endif
 
         public void RegisterListener(EventListenerSO listener, ObjectEvent callback)
         {
