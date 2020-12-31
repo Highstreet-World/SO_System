@@ -13,6 +13,7 @@ namespace SO.Events
         SerializedProperty listeners;
         SerializedProperty description;
         SerializedProperty Value;
+        SerializedProperty debug;
 
         bool showDetails = false;
         void OnEnable()
@@ -21,6 +22,7 @@ namespace SO.Events
             listeners = serializedObject.FindProperty("listeners");
             description = serializedObject.FindProperty("eventDescription");
             Value = serializedObject.FindProperty("Value");
+            debug = serializedObject.FindProperty("debug");
         }
 
         public override void OnInspectorGUI()
@@ -29,6 +31,7 @@ namespace SO.Events
 
             //base.OnInspectorGUI();
 
+            EditorGUILayout.PropertyField(debug);
             EditorGUILayout.PropertyField(description);
             if (GUILayout.Button("Raise"))
             {

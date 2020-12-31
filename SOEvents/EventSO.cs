@@ -7,7 +7,6 @@ namespace SO.Events
     [CreateAssetMenu(fileName = "SOEvent", menuName = "SO/Event")]
     public class EventSO : ScriptableObject
     {
-
         public class ListenerEventPair
         {
             public EventListenerSO listener;
@@ -22,6 +21,8 @@ namespace SO.Events
 
         public List<ListenerEventPair> listenersCallbacks = new List<ListenerEventPair>();
 
+        public bool debug = false;
+
         [TextArea]
         [Tooltip("When is this event raised")]
         public string eventDescription = "[When does this event trigger]";
@@ -35,10 +36,10 @@ namespace SO.Events
 
         public void Raise(object value)
         {
-            Debug.LogWarning("Raise: " + name);
+            if(debug) Debug.LogWarning("Raise: " + name);
             for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
             {
-                Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
+                if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
                 listenersCallbacks[i].objectEvent.Invoke(value);
             }
         }
