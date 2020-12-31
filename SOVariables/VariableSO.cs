@@ -16,7 +16,6 @@ namespace SO
         //Value
         [HideInInspector]
         public T Value { get { return GetValue(); } set { SetValue(value); } }
-        [SerializeField]
         private T _value;
 
         //When the game starts, the starting Value we use (so we can reset if need be)
@@ -89,8 +88,27 @@ namespace SO
     public abstract class IVariableSO : ScriptableObject, IFormattable, System.Runtime.Serialization.ISerializable
     {
         public EventSO OnChanged;
+        public bool allowCash;
+
         protected event System.EventHandler valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
+
+        private void Awake()
+        {
+            if (allowCash)
+            {
+                SetValue(PlayerPrefs.GetString($"SOV{name}"));
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (allowCash)
+            {
+                PlayerPrefs.SetString($"SOV{name}", this.ToString());
+            }
+        }
+
         protected virtual void RaisEvents()
         {
             if (this.valChanged != null) valChanged(this, EventArgs.Empty);
@@ -180,6 +198,16 @@ namespace SO
         public void CopyToInputField(InputField InputFieldComponent)
         {
             InputFieldComponent.text = this.ToString();
+        }
+
+        public void CopyToScrollbar(Scrollbar ScrollbarComponent)
+        {
+            ScrollbarComponent.value = float.Parse(this.ToString());
+        }
+
+        public void CopyToSlider(Slider SliderComponent)
+        {
+            SliderComponent.value = float.Parse(this.ToString());
         }
 
         public void CopyToTMP_InputField(TMPro.TMP_InputField TMP_InputFieldComponent)
