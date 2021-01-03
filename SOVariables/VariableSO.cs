@@ -64,7 +64,10 @@ namespace SO
         /// </summary>
         public void OnAfterDeserialize()
         {
-            _value = startingValue;
+            if (!allowCash)
+            {
+                _value = startingValue;
+            }
             UnSubscripeAll();
         }
 
@@ -97,7 +100,8 @@ namespace SO
         {
             if (allowCash)
             {
-                SetValue(PlayerPrefs.GetString($"SOV{name}"));
+                if (PlayerPrefs.HasKey($"SOV{name}"))
+                    SetValue(PlayerPrefs.GetString($"SOV{name}"));
             }
         }
 
