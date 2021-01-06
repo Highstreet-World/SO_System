@@ -33,6 +33,25 @@ namespace SO.Events
         {
             Raise(null);
         }
+        public void RaiseValue(string value)
+        {
+            Raise(value);
+        }
+
+        public void RaiseValue(int value)
+        {
+            Raise(value);
+        }
+
+        public void RaiseValue(bool value)
+        {
+            Raise(value);
+        }
+
+        public void RaiseValue(float value)
+        {
+            Raise(value);
+        }
 
         public void Raise(object value)
         {
