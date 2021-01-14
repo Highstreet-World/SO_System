@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -28,11 +29,11 @@ namespace SO.Events
         public string eventDescription = "[When does this event trigger]";
 
 
-
         public void Raise()
         {
             Raise(null);
         }
+
         public void RaiseValue(string value)
         {
             Raise(value);
@@ -55,30 +56,22 @@ namespace SO.Events
 
         public void Raise(object value)
         {
-            if(debug) Debug.LogWarning("Raise: " + name);
+            if (debug) Debug.LogWarning("Raise: " + name);
+
+            if (!CoRef.instance) CoRef.CreateCorotineReferance();
+            CoRef.instance.StartCoroutine(InvokeEventListener(value));
+            InvokeEventListener(value);
+        }
+
+        private IEnumerator InvokeEventListener(object value)
+        {
+            yield return new WaitForEndOfFrame();
             for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
             {
                 if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
                 listenersCallbacks[i].objectEvent.Invoke(value);
             }
         }
-
-        public void RaiseAsync()
-        {
-            RaiseAsync(null);
-        }
-#if !UNITY_WEBGL 
-        public async void RaiseAsync(object value)
-        {
-            await Task.Delay(1);
-            Raise(value);
-        }
-#else
-        public void RaiseAsync(object value)
-        {
-            Raise(value);
-        }
-#endif
 
         public void RegisterListener(EventListenerSO listener, ObjectEvent callback)
         {
