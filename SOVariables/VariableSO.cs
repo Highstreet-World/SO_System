@@ -80,6 +80,11 @@ namespace SO
         {
             Value = startingValue;
         }
+        public T GetDefultValue()
+        {
+            return Value;
+        }
+
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
