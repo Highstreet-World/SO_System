@@ -64,21 +64,21 @@ namespace SO
         /// </summary>
         public void OnAfterDeserialize()
         {
-            if (!allowCash)
-            {
-                _value = startingValue;
-            }
+            ResetValue();
             UnSubscripeAll();
         }
 
-        public void OnBeforeSerialize() { UnSubscripeAll(); }
+        public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
 
         /// <summary>
         /// Reset the Value to it's inital Value if it's resettable
         /// </summary>
         public override void ResetValue()
         {
-            Value = startingValue;
+            if (!allowCash)
+            {
+                Value = startingValue;
+            }
         }
         public T GetDefultValue()
         {
@@ -96,17 +96,22 @@ namespace SO
     public abstract class IVariableSO : ScriptableObject, IFormattable, System.Runtime.Serialization.ISerializable
     {
         public EventSO OnChanged;
-        public bool allowCash;
+        public bool allowCash = false;
 
         protected event System.EventHandler valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
 
         private void Awake()
         {
+            
             if (allowCash)
             {
-                if (PlayerPrefs.HasKey($"SOV{name}"))
-                    SetValue(PlayerPrefs.GetString($"SOV{name}"));
+                Z.InvokeEndOfFrame(() =>
+                {
+                    Debug.Log($"retrive  ScriptableObject cash: {name}");
+                    if (PlayerPrefs.HasKey($"SOV{name}"))
+                        SetValue(PlayerPrefs.GetString($"SOV{name}"));
+                });
             }
         }
 
@@ -114,6 +119,7 @@ namespace SO
         {
             if (allowCash)
             {
+                Debug.Log($"cash  ScriptableObject: {name}");
                 PlayerPrefs.SetString($"SOV{name}", this.ToString());
             }
         }

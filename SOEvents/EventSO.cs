@@ -22,7 +22,7 @@ namespace SO.Events
 
         public List<ListenerEventPair> listenersCallbacks = new List<ListenerEventPair>();
 
-        public bool debug = false;
+        public bool debug = true;
 
         [TextArea]
         [Tooltip("When is this event raised")]
