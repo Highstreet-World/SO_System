@@ -57,21 +57,17 @@ namespace SO.Events
         public void Raise(object value)
         {
             if (debug) Debug.LogWarning("Raise: " + name);
-
-            if (!CoRef.instance) CoRef.CreateCorotineReferance();
-            CoRef.instance.StartCoroutine(InvokeEventListener(value));
-            InvokeEventListener(value);
-        }
-
-        private IEnumerator InvokeEventListener(object value)
-        {
-            yield return new WaitForEndOfFrame();
-            for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
+            Z.InvokeEndOfFrame(() =>
             {
-                if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
-                listenersCallbacks[i].objectEvent.Invoke(value);
-            }
+                for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
+                {
+                    if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
+                    listenersCallbacks[i].objectEvent.Invoke(value);
+                }
+            });
         }
+
+
 
         public void RegisterListener(EventListenerSO listener, ObjectEvent callback)
         {

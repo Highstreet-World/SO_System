@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,6 +26,18 @@ public class CoRef : MonoBehaviour
         {
             GameObject gameObject = new GameObject("GameEventCorotuineStarter");
             gameObject.AddComponent<CoRef>();
+        }
+    }
+
+    public static Coroutine StartCoroutineAway(IEnumerator action)
+    {
+        if(Application.isPlaying){
+            if (!instance) CreateCorotineReferance();
+            return instance.StartCoroutine(action);
+        }
+        else
+        {
+            return null;
         }
     }
 

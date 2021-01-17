@@ -3,14 +3,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SO
 {
     //  [CreateAssetMenu(fileName = "SOEvent", menuName = "SO/Event")]
-    public abstract class VariableSO<T> : IVariableSO, ISerializationCallbackReceiver
+    public abstract class VariableSO<T> : IVariableSO/*, ISerializationCallbackReceiver*/
     {
 
         //Value
@@ -36,7 +38,7 @@ namespace SO
         public virtual void SetValue(T newValue, bool log = false)
         {
             if (log) Debug.Log("SetValue: " + newValue + " on " + name);
-            if (!_value.Equals(newValue))
+            if (_value != null && !_value.Equals(newValue))
             {
                 _value = newValue;
 #if UNITY_EDITOR
@@ -62,23 +64,57 @@ namespace SO
         /// <summary>
         /// Recieve callback after unity deseriallzes the object
         /// </summary>
-        public void OnAfterDeserialize()
+        //public void OnAfterDeserialize()
+        //{
+        //    if (!allowCash)
+        //    {
+        //        _value = startingValue;
+        //    }
+        //    UnSubscripeAll();
+        //}
+
+        //public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
+
+
+        protected override void OnBegin(bool isEditor)
         {
-            ResetValue();
-            UnSubscripeAll();
+            if (!isEditor && allowCash)
+            {
+                Z.InvokeEndOfFrame(() =>
+                {
+                    Debug.Log($"retrive  ScriptableObject cash: {name}");
+                    if (PlayerPrefs.HasKey($"SOV{name}"))
+                        SetValue(PlayerPrefs.GetString($"SOV{name}"));
+                });
+            }
+            else
+            {
+                _value = startingValue;
+                UnSubscripeAll();
+            }
         }
 
-        public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
+        protected override void OnEnd(bool isEditor)
+        {
+            if (!isEditor && allowCash)
+            {
+                Debug.Log($"cash  ScriptableObject: {name}");
+                PlayerPrefs.SetString($"SOV{name}", this.ToString());
+            }
+            else
+            {
+                _value = startingValue;
+                UnSubscripeAll();
+            }
+        }
+
 
         /// <summary>
         /// Reset the Value to it's inital Value if it's resettable
         /// </summary>
         public override void ResetValue()
         {
-            if (!allowCash)
-            {
-                Value = startingValue;
-            }
+            Value = startingValue;
         }
         public T GetDefultValue()
         {
@@ -93,36 +129,13 @@ namespace SO
 
     }
 
-    public abstract class IVariableSO : ScriptableObject, IFormattable, System.Runtime.Serialization.ISerializable
+    public abstract class IVariableSO : ManagedScriptableObject, IFormattable, System.Runtime.Serialization.ISerializable
     {
         public EventSO OnChanged;
         public bool allowCash = false;
 
         protected event System.EventHandler valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
-
-        private void Awake()
-        {
-            
-            if (allowCash)
-            {
-                Z.InvokeEndOfFrame(() =>
-                {
-                    Debug.Log($"retrive  ScriptableObject cash: {name}");
-                    if (PlayerPrefs.HasKey($"SOV{name}"))
-                        SetValue(PlayerPrefs.GetString($"SOV{name}"));
-                });
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (allowCash)
-            {
-                Debug.Log($"cash  ScriptableObject: {name}");
-                PlayerPrefs.SetString($"SOV{name}", this.ToString());
-            }
-        }
 
         protected virtual void RaisEvents()
         {
@@ -238,3 +251,4 @@ namespace SO
     }
 
 }
+
