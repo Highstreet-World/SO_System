@@ -31,7 +31,12 @@ public class CoRef : MonoBehaviour
 
     public static Coroutine StartCoroutineAway(IEnumerator action)
     {
-        if(Application.isPlaying){
+#if !UNITY_EDITOR
+        if (!instance) CreateCorotineReferance();
+        return instance.StartCoroutine(action);
+#else
+        if (Application.isPlaying)
+        {
             if (!instance) CreateCorotineReferance();
             return instance.StartCoroutine(action);
         }
@@ -39,6 +44,7 @@ public class CoRef : MonoBehaviour
         {
             return null;
         }
+#endif
     }
 
 }

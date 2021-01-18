@@ -18,6 +18,7 @@ namespace SO
         //Value
         [HideInInspector]
         public T Value { get { return GetValue(); } set { SetValue(value); } }
+        [SerializeField]
         private T _value;
 
         //When the game starts, the starting Value we use (so we can reset if need be)
@@ -28,7 +29,6 @@ namespace SO
         {
             return v.Value;
         }
-
         //public static implicit operator VariableSO<T>(T v)
         //{
         //    this.value = v;
@@ -47,6 +47,7 @@ namespace SO
                     startingValue = _value;
                 }
 #endif
+                CasheValue();
                 RaisEvents();
             }
         }
@@ -56,57 +57,38 @@ namespace SO
             SetValue(numSO.Value);
         }
 
+
+
         public virtual T GetValue()
         {
+            if (!isCacheRetrived && allowCache)
+            {
+                RetriveCache();
+            }
             return _value;
         }
 
-        /// <summary>
-        /// Recieve callback after unity deseriallzes the object
-        /// </summary>
-        //public void OnAfterDeserialize()
-        //{
-        //    if (!allowCash)
-        //    {
-        //        _value = startingValue;
-        //    }
-        //    UnSubscripeAll();
-        //}
-
-        //public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
-
-
         protected override void OnBegin(bool isEditor)
         {
-            if (!isEditor && allowCash)
+            _value = startingValue;
+            UnSubscripeAll();
+            if (allowCache)
             {
-                Z.InvokeEndOfFrame(() =>
-                {
-                    Debug.Log($"retrive  ScriptableObject cash: {name}");
-                    if (PlayerPrefs.HasKey($"SOV{name}"))
-                        SetValue(PlayerPrefs.GetString($"SOV{name}"));
-                });
-            }
-            else
-            {
-                _value = startingValue;
-                UnSubscripeAll();
+                RetriveCache();
             }
         }
 
         protected override void OnEnd(bool isEditor)
         {
-            if (!isEditor && allowCash)
+            if (allowCache)
             {
-                Debug.Log($"cash  ScriptableObject: {name}");
-                PlayerPrefs.SetString($"SOV{name}", this.ToString());
+                CasheValue();
             }
-            else
-            {
-                _value = startingValue;
-                UnSubscripeAll();
-            }
+            _value = startingValue;
+            UnSubscripeAll();
         }
+
+
 
 
         /// <summary>
@@ -132,7 +114,8 @@ namespace SO
     public abstract class IVariableSO : ManagedScriptableObject, IFormattable, System.Runtime.Serialization.ISerializable
     {
         public EventSO OnChanged;
-        public bool allowCash = false;
+        [Header("Cache value if changed \"dont use in update\"")]
+        public bool allowCache = false;
 
         protected event System.EventHandler valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
@@ -211,6 +194,24 @@ namespace SO
                 variableSO = null;
                 return false;
             }
+        }
+
+        protected bool isCacheRetrived = false;
+        protected void RetriveCache()
+        {
+#if !UNITY_EDITOR
+            Debug.Log($"retrive  ScriptableObject cash: {name}");
+            if (PlayerPrefs.HasKey($"SOV{name}"))
+                SetValue(PlayerPrefs.GetString($"SOV{name}"));
+            isCacheRetrived = true;
+#endif
+        }
+        protected void CasheValue()
+        {
+#if !UNITY_EDITOR
+            Debug.Log($"cash  ScriptableObject: {name}");
+            PlayerPrefs.SetString($"SOV{name}", this.ToString());
+#endif
         }
 
         public void CopyToText(Text textComponent)
