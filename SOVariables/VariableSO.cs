@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace SO
 {
     //  [CreateAssetMenu(fileName = "SOEvent", menuName = "SO/Event")]
-    public abstract class VariableSO<T> : IVariableSO/*, ISerializationCallbackReceiver*/
+    public abstract class VariableSO<T> : IVariableSO, ISerializationCallbackReceiver
     {
 
         //Value
@@ -68,27 +68,15 @@ namespace SO
             return _value;
         }
 
-        protected override void OnBegin(bool isEditor)
+        // <summary>
+        // Recieve callback after unity deseriallzes the object
+        // </summary>
+        public void OnAfterDeserialize()
         {
             _value = startingValue;
             UnSubscripeAll();
-            if (allowCache)
-            {
-                RetriveCache();
-            }
         }
-
-        protected override void OnEnd(bool isEditor)
-        {
-            if (allowCache)
-            {
-                CasheValue();
-            }
-            _value = startingValue;
-            UnSubscripeAll();
-        }
-
-
+        public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
 
 
         /// <summary>
@@ -159,6 +147,9 @@ namespace SO
 
         public abstract void SetValue(string value);
 
+
+
+
         public static IVariableSO Parse(string inistanceID)
         {
             int id = 0;
@@ -195,6 +186,23 @@ namespace SO
                 return false;
             }
         }
+
+        protected override void OnBegin(bool isEditor)
+        {
+            if (allowCache)
+            {
+                RetriveCache();
+            }
+        }
+
+        protected override void OnEnd(bool isEditor)
+        {
+            if (allowCache)
+            {
+                CasheValue();
+            }
+        }
+
 
         protected bool isCacheRetrived = false;
         protected void RetriveCache()
