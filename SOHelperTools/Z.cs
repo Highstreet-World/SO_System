@@ -13,6 +13,11 @@ public static class Z
     {
         return CoRef.StartCoroutineAway(_WaitForEndOfFrame(callback));
     }
+
+    public static Coroutine InvokeWhen(Action callback, Func<bool> predect)
+    {
+        return CoRef.StartCoroutineAway(_WaitUntil(callback, predect));
+    }
     static IEnumerator _WaitForSeconds(float delay, Action callback)
     {
         yield return new WaitForSeconds(delay);
@@ -21,6 +26,11 @@ public static class Z
     static IEnumerator _WaitForEndOfFrame(Action callback)
     {
         yield return new WaitForEndOfFrame();
+        callback.Invoke();
+    }
+    static IEnumerator _WaitUntil(Action callback, Func<bool> predect)
+    {
+        yield return new WaitUntil(predect);
         callback.Invoke();
     }
 }

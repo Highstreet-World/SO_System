@@ -25,7 +25,7 @@ public class CoRef : MonoBehaviour
         if (!instance)
         {
             GameObject gameObject = new GameObject("GameEventCorotuineStarter");
-            gameObject.AddComponent<CoRef>();
+            instance = gameObject.AddComponent<CoRef>();
         }
     }
 
