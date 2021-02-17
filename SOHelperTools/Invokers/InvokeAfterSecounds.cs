@@ -13,13 +13,13 @@ public class InvokeAfterSecounds : MonoBehaviour
     public UnityEvent OnTimeEnd;
 
     Coroutine CO;
-    IEnumerator InvokeAfterCO()
+    IEnumerator InvokeAfterCO(float secounds)
     {
         do
         {
             yield return new WaitForSeconds(secounds);
             OnTimeEnd.Invoke();
-        } while (Loop);
+        } while (Loop && secounds > 0);
         CO = null;
     }
 
@@ -27,7 +27,7 @@ public class InvokeAfterSecounds : MonoBehaviour
     {
         if (CountOnEnable)
         {
-            CO = StartCoroutine(InvokeAfterCO());
+            CO = CoRef.StartCoroutineAway(InvokeAfterCO(secounds));
         }
     }
 
@@ -35,25 +35,26 @@ public class InvokeAfterSecounds : MonoBehaviour
     {
         if (CountOnStart)
         {
-            CO = StartCoroutine(InvokeAfterCO());
+            CO = CoRef.StartCoroutineAway(InvokeAfterCO(secounds));
         }
     }
 
-    public void ManualStart()
+    public void ManualStart(float secounds)
     {
         if (CO != null)
         {
             StopCoroutine(CO);
         }
-        CO = StartCoroutine(InvokeAfterCO());
-
+        CO = CoRef.StartCoroutineAway(InvokeAfterCO(secounds));
+    }
+    public void ManualStart()
+    {
+        ManualStart(secounds);
     }
 
     public void ManualStop()
     {
-
         StopCoroutine(CO);
-
     }
 
     private void OnDisable()
