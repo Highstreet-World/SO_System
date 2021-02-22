@@ -41,12 +41,10 @@ public class InvokeAfterSecounds : MonoBehaviour
 
     public void ManualStart(float secounds)
     {
-        if (CO != null)
-        {
-            StopCoroutine(CO);
-        }
+        ManualStop();
         CO = CoRef.StartCoroutineAway(InvokeAfterCO(secounds));
     }
+    
     public void ManualStart()
     {
         ManualStart(secounds);
@@ -54,7 +52,10 @@ public class InvokeAfterSecounds : MonoBehaviour
 
     public void ManualStop()
     {
-        StopCoroutine(CO);
+        if (CO != null)
+        {
+            StopCoroutine(CO);
+        }
     }
 
     private void OnDisable()
