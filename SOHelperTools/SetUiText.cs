@@ -78,7 +78,7 @@ public class SetUiText : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Unhandled SO type");
+               Debuger.LogError("Unhandled SO type");
             }
         }
         if (StringData.Count != UiTextRefrences.Length)
@@ -97,12 +97,12 @@ public class SetUiText : MonoBehaviour
                         text.text = string.Format(OutputFormat, StringData.ToArray());
                 }
 
-                Debug.Log(string.Format(OutputFormat, StringData.ToArray()));
+               Debuger.Log(string.Format(OutputFormat, StringData.ToArray()));
             }
         }
         else
         {
-            Debug.LogError("Not all the variables converted to string successfully");
+           Debuger.LogError("Not all the variables converted to string successfully");
         }
     }
 

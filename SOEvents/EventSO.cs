@@ -56,12 +56,12 @@ namespace SO.Events
 
         public void Raise(object value)
         {
-            if (debug) Debug.LogWarning("Raise: " + name);
+            if (debug)Debuger.LogWarning("Raise: " + name);
             Z.InvokeEndOfFrame(() =>
             {
                 for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
                 {
-                    if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
+                    if (debug)Debuger.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
                     listenersCallbacks[i].objectEvent.Invoke(value);
                 }
             });

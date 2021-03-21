@@ -238,7 +238,7 @@ namespace SO
                 }
                 else
                 {
-                    Debug.LogError("You cant select folder outside Assets/");
+                   Debuger.LogError("You cant select folder outside Assets/");
                 }
             }
             return null;

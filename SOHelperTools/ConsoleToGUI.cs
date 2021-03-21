@@ -40,15 +40,15 @@ namespace DebugStuff
 
         public void TestError()
         {
-            Debug.LogError("error test");
+           Debuger.LogError("error test");
         }      
         public void TestWarning()
         {
-            Debug.LogWarning("warning test");
+           Debuger.LogWarning("warning test");
         }
         public void TestLog()
         {
-            Debug.Log("Log test");
+           Debuger.Log("Log test");
         }
 
         //void OnGUI()

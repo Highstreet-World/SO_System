@@ -165,7 +165,7 @@ public abstract class PropertyDrawerExtended : PropertyDrawer
         else
         {
             var answer = EditorUtility.DisplayDialog("Auto Assign SO", "Couldn't find SOAsset: ( " + newAssetname + ".asset ). ", "Create New", "Cancel");
-            Debug.Log(answer);
+           Debuger.Log(answer);
             if (answer)//create new
             {
                 return CreateNewSO(newAssetname, ref path, property); ;
