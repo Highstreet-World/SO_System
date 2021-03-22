@@ -37,7 +37,7 @@ namespace SO
 
         public virtual void SetValue(T newValue, bool log = false)
         {
-            if (log)Debuger.Log("SetValue: " + newValue + " on " + name);
+            if (log) Debuger.Log("SetValue: " + newValue + " on " + name);
             if (_value != null && !_value.Equals(newValue))
             {
                 _value = newValue;
@@ -47,7 +47,10 @@ namespace SO
                     startingValue = _value;
                 }
 #endif
-                CasheValue();
+                if (allowCache)
+                {
+                    CasheValue();
+                }
                 RaisEvents();
             }
         }
@@ -207,8 +210,8 @@ namespace SO
         protected bool isCacheRetrived = false;
         protected void RetriveCache()
         {
+            Debuger.Log($"retrive  ScriptableObject cash: {name}");
 #if !UNITY_EDITOR
-           Debuger.Log($"retrive  ScriptableObject cash: {name}");
             if (PlayerPrefs.HasKey($"SOV{name}"))
                 SetValue(PlayerPrefs.GetString($"SOV{name}"));
             isCacheRetrived = true;
@@ -216,8 +219,8 @@ namespace SO
         }
         protected void CasheValue()
         {
+            Debuger.Log($"cash  ScriptableObject: {name}");
 #if !UNITY_EDITOR
-           Debuger.Log($"cash  ScriptableObject: {name}");
             PlayerPrefs.SetString($"SOV{name}", this.ToString());
 #endif
         }
