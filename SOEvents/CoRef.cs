@@ -47,4 +47,8 @@ public class CoRef : MonoBehaviour
 #endif
     }
 
+    internal static void StopCoroutineAway(Coroutine co)
+    {
+        instance.StopCoroutine(co);
+    }
 }

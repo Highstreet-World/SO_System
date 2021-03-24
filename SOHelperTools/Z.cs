@@ -33,4 +33,8 @@ public static class Z
         yield return new WaitUntil(predect);
         callback.Invoke();
     }
+    public static void Stop(Coroutine co)
+    {
+        CoRef.StopCoroutineAway(co);
+    }
 }
