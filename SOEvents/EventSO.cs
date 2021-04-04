@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -54,20 +55,39 @@ namespace SO.Events
             Raise(value);
         }
 
+
+
         public void Raise(object value)
+        {
+            Raise(value, null, null);
+        }
+        public void Raise(object value, Action preRaise, Action postRaise)
         {
             if (debug) Debug.LogWarning("Raise: " + name);
             Z.InvokeEndOfFrame(() =>
             {
-                for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
-                {
-                    if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
-                    listenersCallbacks[i].objectEvent.Invoke(value);
-                }
+                RaiseImmediately(value, preRaise, postRaise);
             });
         }
 
-
+        public void RaiseImmediately()
+        {
+            RaiseImmediately(null);
+        }
+        public void RaiseImmediately(object value)
+        {
+            RaiseImmediately(value, null, null);
+        }
+        public void RaiseImmediately(object value, Action preRaise, Action postRaise)
+        {
+            preRaise?.Invoke();
+            for (int i = listenersCallbacks.Count - 1; i >= 0; i--)
+            {
+                if (debug) Debug.LogWarning("event: " + name + " invoke " + listenersCallbacks[i].listener.name);
+                listenersCallbacks[i].objectEvent.Invoke(value);
+            }
+            postRaise?.Invoke();
+        }
 
         public void RegisterListener(EventListenerSO listener, ObjectEvent callback)
         {
