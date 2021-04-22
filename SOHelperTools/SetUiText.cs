@@ -64,46 +64,47 @@ public class SetUiText : MonoBehaviour
 
         for (int i = 0; i < DataSources.Length; i++)
         {
-            if (DataSources[i] is StringSO)
+            //    if (DataSources[i] is StringSO)
+            //    {
+            //        StringData.Add(((StringSO)DataSources[i]).GetValue());
+            //    }
+            //    else if (DataSources[i] is IntSO)
+            //    {
+            //        StringData.Add(((IntSO)DataSources[i]).GetValue().ToString());
+            //    }
+            //    else if (DataSources[i] is FloatSO)
+            //    {
+            //        StringData.Add(((FloatSO)DataSources[i]).GetValue().ToString());
+            //    }
+            //    else
+            //    {
+            //       Debuger.LogError("Unhandled SO type");
+            StringData.Add(DataSources[i].ToString());
+            //    }
+        }
+        //if (StringData.Count != UiTextRefrences.Length)
+        //{
+
+        for (int i = 0; i < UiTextRefrences.Length; i++)
+        {
+            if (textType == TextType.text)
             {
-                StringData.Add(((StringSO)DataSources[i]).GetValue());
-            }
-            else if (DataSources[i] is IntSO)
-            {
-                StringData.Add(((IntSO)DataSources[i]).GetValue().ToString());
-            }
-            else if (DataSources[i] is FloatSO)
-            {
-                StringData.Add(((FloatSO)DataSources[i]).GetValue().ToString());
+                UiTextRefrences[i].GetComponent<Text>().text = string.Format(OutputFormat, StringData.ToArray());
             }
             else
             {
-               Debuger.LogError("Unhandled SO type");
+                var text = UiTextRefrences[i].GetComponent<TMP_Text>();
+                if (text != null)
+                    text.text = string.Format(OutputFormat, StringData.ToArray());
             }
-        }
-        if (StringData.Count != UiTextRefrences.Length)
-        {
 
-            for (int i = 0; i < UiTextRefrences.Length; i++)
-            {
-                if (textType == TextType.text)
-                {
-                    UiTextRefrences[i].GetComponent<Text>().text = string.Format(OutputFormat, StringData.ToArray());
-                }
-                else
-                {
-                    var text = UiTextRefrences[i].GetComponent<TMP_Text>();
-                    if (text != null)
-                        text.text = string.Format(OutputFormat, StringData.ToArray());
-                }
-
-               Debuger.Log(string.Format(OutputFormat, StringData.ToArray()));
-            }
+            Debuger.Log(string.Format(OutputFormat, StringData.ToArray()));
         }
-        else
-        {
-           Debuger.LogError("Not all the variables converted to string successfully");
-        }
+        //}
+        //else
+        //{
+        //   Debuger.LogError("Not all the variables converted to string successfully");
+        //}
     }
 
 }

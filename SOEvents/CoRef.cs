@@ -49,6 +49,6 @@ public class CoRef : MonoBehaviour
 
     internal static void StopCoroutineAway(Coroutine co)
     {
-        instance.StopCoroutine(co);
+        if (co != null) try { instance.StopCoroutine(co); } catch (Exception e) { Debuger.LogWarning(e.Message); };
     }
 }
