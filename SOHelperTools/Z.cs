@@ -18,6 +18,10 @@ public static class Z
     {
         return CoRef.StartCoroutineAway(_WaitUntil(callback, predect));
     }
+    public static Coroutine InvokeWhile(Action callback, Func<bool> predect)
+    {
+        return CoRef.StartCoroutineAway(_WaitWhile(callback, predect));
+    }
     static IEnumerator _WaitForSeconds(float delay, Action callback)
     {
         yield return new WaitForSeconds(delay);
@@ -33,6 +37,16 @@ public static class Z
         yield return new WaitUntil(predect);
         callback.Invoke();
     }
+
+    static IEnumerator _WaitWhile(Action callback, Func<bool> predect)
+    {
+        while (predect())
+        {
+            callback();
+            yield return true;
+        }
+    }
+
     public static void Stop(Coroutine co)
     {
         CoRef.StopCoroutineAway(co);
