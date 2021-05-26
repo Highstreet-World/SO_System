@@ -12,6 +12,7 @@ namespace SO.Events
     public class SOListener
     {
         public EventSO Event;
+        [Tooltip("must be enabled at first")]
         public bool listenWhenDisabled;
         public ObjectEvent Response;
         public EventListenerSO source;
