@@ -17,7 +17,7 @@ namespace SO
 
         //Value
         [HideInInspector]
-        public T Value { get { return GetValue(); } set { SetValue(value, false); } }
+        public T Value { get { return GetValue(); } set { SetValue(value); } }
         [SerializeField]
         private T _value;
 
@@ -35,10 +35,10 @@ namespace SO
         //    return this;
         //}
 
-        public virtual void SetValue(T newValue, bool log = false)
+        public virtual void SetValue(T newValue, bool forceUpdate=false, bool log = false)
         {
             if (log) Debuger.Log("SetValue: " + newValue + " on " + name);
-            if ((_value == null && newValue != null) || (_value != null && !_value.Equals(newValue)))
+            if ((_value == null && newValue != null) || forceUpdate || (_value != null && !_value.Equals(newValue)))
             {
                 _value = newValue;
 #if UNITY_EDITOR
