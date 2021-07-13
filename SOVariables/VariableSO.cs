@@ -250,6 +250,11 @@ namespace SO
             SliderComponent.value = float.Parse(this.ToString());
         }
 
+        public void CopyToToggle(Toggle toggle)
+        {
+            toggle.SetIsOnWithoutNotify(bool.Parse(this.ToString()));
+        }
+
         public void CopyToTMP_InputField(TMPro.TMP_InputField TMP_InputFieldComponent)
         {
             TMP_InputFieldComponent.text = this.ToString();
