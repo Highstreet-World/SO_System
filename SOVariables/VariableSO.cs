@@ -210,7 +210,6 @@ namespace SO
         protected bool isCacheRetrived = false;
         protected void RetriveCache()
         {
-            Debuger.Log($"retrive  ScriptableObject cash: {name}");
 #if !UNITY_EDITOR
             if (PlayerPrefs.HasKey($"SOV{name}"))
                 SetValue(PlayerPrefs.GetString($"SOV{name}"));
@@ -219,7 +218,6 @@ namespace SO
         }
         protected void CasheValue()
         {
-            Debuger.Log($"cash  ScriptableObject: {name}");
 #if !UNITY_EDITOR
             PlayerPrefs.SetString($"SOV{name}", this.ToString());
 #endif
