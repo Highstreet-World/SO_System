@@ -98,7 +98,7 @@ public class SetUiText : MonoBehaviour
                     text.text = string.Format(OutputFormat, StringData.ToArray());
             }
 
-            Debuger.Log(string.Format(OutputFormat, StringData.ToArray()));
+           // Debuger.Log(string.Format(OutputFormat, StringData.ToArray()));
         }
         //}
         //else
