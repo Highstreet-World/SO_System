@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class InvokeOnEnable : MonoBehaviour
 {
-    public UnityEvent OnEnable;
-
+    [FormerlySerializedAs("OnEnable")] public UnityEvent onEnable;
+    bool isFirstTime = true;
     private void Start()
     {
-        OnEnable.Invoke();
+        isFirstTime = false;
+        OnEnable();
+    }
+    private void OnEnable()
+    {
+        if (isFirstTime) return;
+        onEnable.Invoke();
     }
 }
