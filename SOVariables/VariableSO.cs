@@ -76,18 +76,18 @@ namespace SO
         // </summary>
         public void OnAfterDeserialize()
         {
-            if (!Application.isPlaying)
-            {
-                _value = startingValue;
-                UnSubscripeAll();
-            }
+            //if (!Application.isPlaying)
+            //{
+            //    _value = startingValue;
+            //    UnSubscripeAll();
+            //}
         }
         public void OnBeforeSerialize()
         {
-            if (!Application.isPlaying)
-            {
-                UnSubscripeAll(); ResetValue();
-            }
+            //if (!Application.isPlaying)
+            //{
+            //    UnSubscripeAll(); ResetValue();
+            //}
         }
 
 
@@ -97,6 +97,7 @@ namespace SO
         public override void ResetValue()
         {
             Value = startingValue;
+            UnSubscripeAll();
         }
         public T GetDefultValue()
         {
@@ -131,6 +132,7 @@ namespace SO
         }
         protected void Initialize()
         {
+            if (refToSoVars == null) { refToSoVars = new List<IVariableSO>(); }
             //#if UNITY_EDITOR
             if (!refToSoVars.Contains(this))
             {
@@ -232,6 +234,7 @@ namespace SO
             {
                 CasheValue();
             }
+            ResetValue();
         }
 
 
