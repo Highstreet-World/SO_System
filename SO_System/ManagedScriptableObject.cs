@@ -10,12 +10,12 @@ public abstract class ManagedScriptableObject : ScriptableObject
     abstract protected void OnEnd(bool isEditor);
 
 #if UNITY_EDITOR
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         EditorApplication.playModeStateChanged += OnPlayStateChange;
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         EditorApplication.playModeStateChanged -= OnPlayStateChange;
     }
@@ -32,12 +32,12 @@ public abstract class ManagedScriptableObject : ScriptableObject
         }
     }
 #else
-        protected void OnEnable()
+        protected virtual void OnEnable()
         {
             OnBegin(false);
         }
  
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
             OnEnd(false);
         }

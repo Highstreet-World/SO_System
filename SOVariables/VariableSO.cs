@@ -35,7 +35,7 @@ namespace SO
         //    return this;
         //}
 
-        public virtual void SetValue(T newValue, bool forceUpdate=false, bool log = false)
+        public virtual void SetValue(T newValue, bool forceUpdate = false, bool log = false)
         {
             if (log) Debuger.Log("SetValue: " + newValue + " on " + name);
             if ((_value == null && newValue != null) || forceUpdate || (_value != null && !_value.Equals(newValue)))
@@ -77,10 +77,10 @@ namespace SO
         public void OnAfterDeserialize()
         {
             if (!Application.isPlaying)
-        {
-            _value = startingValue;
-            UnSubscripeAll();
-        }
+            {
+                _value = startingValue;
+                UnSubscripeAll();
+            }
         }
         public void OnBeforeSerialize()
         {
@@ -119,6 +119,25 @@ namespace SO
 
         protected event System.EventHandler valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
+        static List<IVariableSO> refToSoVars = new List<IVariableSO>();
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            Initialize();
+        }
+        protected virtual void Awake()
+        {
+            Initialize();
+        }
+        protected void Initialize()
+        {
+            //#if UNITY_EDITOR
+            if (!refToSoVars.Contains(this))
+            {
+                refToSoVars.Add(this);
+            }
+            //#endif
+        }
 
         protected virtual void RaisEvents()
         {
