@@ -76,10 +76,19 @@ namespace SO
         // </summary>
         public void OnAfterDeserialize()
         {
+            if (!Application.isPlaying)
+        {
             _value = startingValue;
             UnSubscripeAll();
         }
-        public void OnBeforeSerialize() { UnSubscripeAll(); ResetValue(); }
+        }
+        public void OnBeforeSerialize()
+        {
+            if (!Application.isPlaying)
+            {
+                UnSubscripeAll(); ResetValue();
+            }
+        }
 
 
         /// <summary>
