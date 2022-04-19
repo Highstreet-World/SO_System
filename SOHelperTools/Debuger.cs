@@ -27,7 +27,7 @@ public class Debuger : MonoBehaviour
     public static void LogWarning(object message)
     {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-        Debug.LogWarning(message);
+      //  Debug.LogWarning(message);
 #else
         if(enableDebug) Debug.LogWarning(message);
 #endif
