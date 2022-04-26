@@ -143,8 +143,28 @@ namespace SO
 
         protected virtual void RaisEvents()
         {
-            if (this.valChanged != null) valChanged(this, EventArgs.Empty);
-            if (OnChanged != null) OnChanged.Raise();
+            if (this.valChanged != null)
+            {
+                try
+                {
+                    valChanged(this, EventArgs.Empty);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            }
+            if (OnChanged != null)
+            {
+                try
+                {
+                    OnChanged.Raise();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            }
         }
 
         public void Subscripe(System.EventHandler onValChanged)
