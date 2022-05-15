@@ -118,7 +118,7 @@ namespace SO
         [Header("Cache value if changed \"dont use in update\"")]
         public bool allowCache = false;
 
-        protected event System.EventHandler valChanged;
+        protected List<EventHandler> valChanged;
         List<EventHandler> supEvents = new List<EventHandler>();
         static List<IVariableSO> refToSoVars = new List<IVariableSO>();
         protected override void OnEnable()
@@ -145,14 +145,18 @@ namespace SO
         {
             if (this.valChanged != null)
             {
-                try
+                for (int i = 0; i < valChanged.Count; i++)
                 {
-                    valChanged(this, EventArgs.Empty);
+                    try
+                    {
+                        valChanged[i].Invoke(this, EventArgs.Empty);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
+                
             }
             if (OnChanged != null)
             {
@@ -169,20 +173,18 @@ namespace SO
 
         public void Subscripe(System.EventHandler onValChanged)
         {
-            valChanged += onValChanged;
+            if (valChanged == null) valChanged = new List<EventHandler>();
+            valChanged.Add(onValChanged);
             supEvents.Add(onValChanged);
         }
         public void UnSubscripe(System.EventHandler onValChanged)
         {
-            valChanged -= onValChanged;
+            if(valChanged != null) valChanged.Remove(onValChanged);
             supEvents.Remove(onValChanged);
         }
         public void UnSubscripeAll()
         {
-            for (int i = 0; i < supEvents.Count; i++)
-            {
-                valChanged -= supEvents[i];
-            }
+            if(valChanged != null) valChanged.Clear();
             supEvents.Clear();
         }
 
