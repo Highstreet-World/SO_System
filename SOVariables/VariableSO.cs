@@ -55,9 +55,9 @@ namespace SO
             }
         }
 
-        public void SetValue(VariableSO<T> numSO)
+        public virtual void SetValue(VariableSO<T> variableSo)
         {
-            SetValue(numSO.Value);
+            SetValue(variableSo.Value);
         }
 
 
@@ -156,7 +156,7 @@ namespace SO
                         Debug.LogException(e);
                     }
                 }
-                
+
             }
             if (OnChanged != null)
             {
@@ -179,12 +179,12 @@ namespace SO
         }
         public void UnSubscripe(System.EventHandler onValChanged)
         {
-            if(valChanged != null) valChanged.Remove(onValChanged);
+            if (valChanged != null) valChanged.Remove(onValChanged);
             supEvents.Remove(onValChanged);
         }
         public void UnSubscripeAll()
         {
-            if(valChanged != null) valChanged.Clear();
+            if (valChanged != null) valChanged.Clear();
             supEvents.Clear();
         }
 

@@ -184,7 +184,7 @@ public abstract class PropertyDrawerExtended : PropertyDrawer
         path = "Assets/" + path + "{0}.asset";
         UnityEngine.Object newSO = null;
         var j = 0;
-        var generatedName = newAssetname;
+        var generatedName = newAssetname.Replace(" ","");
         do
         {
             generatedName = newAssetname + (j == 0 ? "" : (" " + j));
@@ -209,7 +209,7 @@ public abstract class PropertyDrawerExtended : PropertyDrawer
         for (int i = 0; i < alreadyExistAssets.Length && !isFound; i++)
         {
             foundSo = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(alreadyExistAssets[i]), propertyType);
-            if (foundSo.name.Trim().ToLower() == newAssetname.Trim().ToLower())
+            if (foundSo.name.Trim().Replace(" ","").ToLower() == newAssetname.Trim().Replace(" ", "").ToLower())
             {
                 isFound = true;
                 break;
