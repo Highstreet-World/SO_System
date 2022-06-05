@@ -216,15 +216,16 @@ namespace SO
                     return (IVariableSO)EditorUtility.InstanceIDToObject(id);
                 }
                 catch (Exception)
-#endif
                 {
-                    throw new Exception("cant find inistanceID: " + inistanceID);
+                    Debug.LogError("cant find inistanceID: " + inistanceID);
                 }
+#endif
             }
             else
             {
-                throw new Exception("string is not inistanceID: " + inistanceID);
+                Debug.LogError("string is not inistanceID: " + inistanceID);
             }
+            return null;
         }
 
         public static bool TryParse(string inistanceID, out IVariableSO variableSO)
@@ -256,23 +257,31 @@ namespace SO
             {
                 CasheValue();
             }
+#if UNITY_EDITOR
             ResetValue();
+#endif
         }
 
 
         protected bool isCacheRetrived = false;
         protected void RetriveCache()
         {
+            Debug.Log("RetriveCache");
 #if !UNITY_EDITOR
             if (PlayerPrefs.HasKey($"SOV{name}"))
+            {
                 SetValue(PlayerPrefs.GetString($"SOV{name}"));
-            isCacheRetrived = true;
+                Debug.Log(PlayerPrefs.GetString($"SOV{name}"));
+            }
 #endif
+            isCacheRetrived = true;
         }
         protected void CasheValue()
         {
+            Debug.Log("CasheValue:"+ this.ToString());
 #if !UNITY_EDITOR
             PlayerPrefs.SetString($"SOV{name}", this.ToString());
+            Debug.Log(PlayerPrefs.GetString($"SOV{name}"));
 #endif
         }
 
