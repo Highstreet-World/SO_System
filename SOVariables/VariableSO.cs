@@ -126,6 +126,16 @@ namespace SO
             base.OnEnable();
             Initialize();
         }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            if (allowCache)
+            {
+                CasheValue();
+            }
+        }
         protected virtual void Awake()
         {
             Initialize();
@@ -137,6 +147,11 @@ namespace SO
             if (!refToSoVars.Contains(this))
             {
                 refToSoVars.Add(this);
+            }
+
+            if (!isCacheRetrived && allowCache)
+            {
+                RetriveCache();
             }
             //#endif
         }
@@ -278,7 +293,7 @@ namespace SO
         }
         protected void CasheValue()
         {
-            Debug.Log("CasheValue:"+ this.ToString());
+            Debug.Log("CasheValue:" + this.ToString());
 #if !UNITY_EDITOR
             PlayerPrefs.SetString($"SOV{name}", this.ToString());
             Debug.Log(PlayerPrefs.GetString($"SOV{name}"));
