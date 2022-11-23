@@ -51,6 +51,11 @@ public class Debuger : MonoBehaviour
 #endif
     }
 
+    internal static void LogException(Exception e)
+    {
+        Debug.LogException(e);
+    }
+
     public static void LogError(object message, UnityEngine.Object context)
     {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
