@@ -37,16 +37,11 @@ namespace SO
 
         public virtual void SetValue(T newValue, bool forceUpdate = false, bool log = false)
         {
-            if (log) Debuger.Log("SetValue: " + newValue + " on " + name);
+            if (log) Debuger.Log("SetValue: " + newValue + " on " + this.name);
             if ((_value == null && newValue != null) || forceUpdate || (_value != null && !_value.Equals(newValue)))
             {
                 _value = newValue;
-#if UNITY_EDITOR
-                if (!Application.isPlaying)
-                {
-                    startingValue = _value;
-                }
-#endif
+
                 if (allowCache)
                 {
                     CasheValue();
@@ -135,6 +130,8 @@ namespace SO
             {
                 CasheValue();
             }
+            else
+                ResetValue();
         }
         protected virtual void Awake()
         {
@@ -143,7 +140,6 @@ namespace SO
         protected void Initialize()
         {
             if (refToSoVars == null) { refToSoVars = new List<IVariableSO>(); }
-            //#if UNITY_EDITOR
             if (!refToSoVars.Contains(this))
             {
                 refToSoVars.Add(this);
@@ -153,7 +149,7 @@ namespace SO
             {
                 RetriveCache();
             }
-            //#endif
+
         }
 
         protected virtual void RaisEvents()
@@ -272,32 +268,41 @@ namespace SO
             {
                 CasheValue();
             }
-#if UNITY_EDITOR
-            ResetValue();
-#endif
+
         }
 
 
         protected bool isCacheRetrived = false;
         protected void RetriveCache()
         {
-            Debug.Log("RetriveCache");
-#if !UNITY_EDITOR
-            if (PlayerPrefs.HasKey($"SOV{name}"))
+
+            //if (PlayerPrefs.HasKey($"SOV{this.name}"))
+            //{
+            //    SetValue(PlayerPrefs.GetString($"SOV{this.name}"));
+            //    //  Debug.Log("RetriveCache of " + this.name + "is " + PlayerPrefs.GetString($"SOV{this.name}"));
+            //}
+            //else
+            //    ResetValue();
+
+            if (!PlayerPrefs.HasKey($"SOV{this.name}"))
             {
-                SetValue(PlayerPrefs.GetString($"SOV{name}"));
-                Debug.Log(PlayerPrefs.GetString($"SOV{name}"));
+                ResetValue();
+                PlayerPrefs.SetString($"SOV{this.name}", null);
+            }else
+            {
+                SetValue(PlayerPrefs.GetString($"SOV{this.name}"));
             }
-#endif
+
             isCacheRetrived = true;
         }
         protected void CasheValue()
         {
-            Debug.Log("CasheValue:" + this.ToString());
-#if !UNITY_EDITOR
-            PlayerPrefs.SetString($"SOV{name}", this.ToString());
-            Debug.Log(PlayerPrefs.GetString($"SOV{name}"));
-#endif
+            if (!PlayerPrefs.HasKey($"SOV{this.name}"))
+            {
+                ResetValue();
+            }else
+             PlayerPrefs.SetString($"SOV{this.name}", this.ToString());
+            // Debug.Log("CashValue of "+ this.name+ "is " + PlayerPrefs.GetString($"SOV{this.name}"));
         }
 
         public void CopyToText(Text textComponent)
