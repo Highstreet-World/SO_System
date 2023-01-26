@@ -19,7 +19,7 @@ namespace SO
         [HideInInspector]
         public T Value { get { return GetValue(); } set { SetValue(value); } }
         [SerializeField]
-        private T _value;
+        protected T m_value;
 
         //When the game starts, the starting Value we use (so we can reset if need be)
         [SerializeField]
@@ -38,9 +38,9 @@ namespace SO
         public virtual void SetValue(T newValue, bool forceUpdate = false, bool log = false)
         {
             if (log) Debuger.Log("SetValue: " + newValue + " on " + this.name);
-            if ((_value == null && newValue != null) || forceUpdate || (_value != null && !_value.Equals(newValue)))
+            if ((m_value == null && newValue != null) || forceUpdate || (m_value != null && !m_value.Equals(newValue)))
             {
-                _value = newValue;
+                m_value = newValue;
 
                 if (allowCache)
                 {
@@ -63,7 +63,7 @@ namespace SO
             {
                 RetriveCache();
             }
-            return _value;
+            return m_value;
         }
 
         // <summary>
