@@ -33,7 +33,8 @@ public class CompareIntegerSOVariables : MonoBehaviour
         if (AutoListen)
         {
             var1.Subscripe(OnValChange);
-            var2_SO.Subscripe(OnValChange);
+            if(var2_SO != null)
+                var2_SO.Subscripe(OnValChange);
         }
     }
     private void OnDisable()
@@ -41,7 +42,8 @@ public class CompareIntegerSOVariables : MonoBehaviour
         {
             if (AutoListen) { }
             var1.UnSubscripe(OnValChange);
-            var2_SO.UnSubscripe(OnValChange);
+            if (var2_SO != null)
+                var2_SO.UnSubscripe(OnValChange);
         }
     }
 
